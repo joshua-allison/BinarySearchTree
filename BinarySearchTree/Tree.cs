@@ -86,6 +86,21 @@ namespace BinarySearchTreeClasses
             }
         }
 
+        /// <summary>
+        /// "For each node encountered, first check for equality and return true since we have found the value being searched for."
+        /// "Then, if we do not have equality, we go to either the left or right subtree depending on the relationship between the value being searched for and the value in the node."
+        /// </summary>
+        /// <param name="value"> The value to search the tree for. </param>
+        /// <param name="node"> The node to start the search from. </param>
+        /// <returns> True if the value is found, false otherwise. </returns>
+        /// <accreditation> The algorithm for this function is from "Binary Search Trees" by Jim Bailey. </accreditation>
+        private bool RecursiveFindValue(int value, Node<int> node)
+        {
+            if (node is null) return false;
+            if (node.GetValue() == value) return true;
+            return node.GetValue() > value ? RecursiveFindValue(value, node.GetLeft()) : RecursiveFindValue(value, node.GetRight());
+        }
+
 
 
         // overloaded constructor
@@ -112,14 +127,24 @@ namespace BinarySearchTreeClasses
         }
 
         /// <summary>
-        /// 
+        /// "Start at the root and continue until we find the value or reach a nullptr. (...) Choose to go either right or left depending on a comparison of the value being sarched for and the value in the node"
+        /// This is the iterative version.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool FindValue(int value)
-        {
-            throw new NotImplementedException();
-        }
+        /// <param name="value"> The value to search the tree for. </param>
+        /// <returns> True if the value is found, false otherwise</returns>
+        /// <accreditation> The algorithm for this function is from "Binary Search Trees" by Jim Bailey. </accreditation>
+        //public bool FindValue(int value)
+        //{
+        //    Node<int> node = Root;
+        //    while (node != null)
+        //    {
+        //        if (node.GetValue() == value) return true;
+        //        node = node.GetValue() > value ? node.GetLeft() : node.GetRight();
+        //    }
+        //    return false;
+        //}
+
+        public bool FindValue(int value) => RecursiveFindValue(value, Root);
 
         /// <summary>
         /// 

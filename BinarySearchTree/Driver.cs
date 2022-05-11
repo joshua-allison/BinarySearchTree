@@ -21,8 +21,8 @@ namespace FindLargerTreeDriver
         static void Main(string[] args)
         {
 
-            InsertInorderTest();
-            //FindTest();
+            //InsertInorderTest();
+            FindTest();
             //RemoveTest();
             //FindLargerTest();
             //RemoveLargerTest();
