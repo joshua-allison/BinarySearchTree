@@ -72,6 +72,7 @@ namespace BinarySearchTreeClasses
                 {
                     Node<int> temp = new(value);
                     node.SetLeft(temp);
+                    temp.SetParent(node);
                 }
                 else RecursiveAddValue(value, node.GetLeft());
             }
@@ -81,6 +82,7 @@ namespace BinarySearchTreeClasses
                 {
                     Node<int> temp = new(value);
                     node.SetRight(temp);
+                    temp.SetParent(node);
                 }
                 else RecursiveAddValue(value, node.GetRight());
             }
@@ -208,8 +210,21 @@ namespace BinarySearchTreeClasses
         /// <param name="node"> The node to start the recursive function from. </param>
         /// <returns> The node in the binary tree that contains the smallest value. </returns>
         /// <accreditation> The algorithm for this function is based heavily on "Deletion from BST (Binary Search Tree)" by Techie Delight: https://www.techiedelight.com/deletion-from-bst/ </accreditation>
-        private Node<int> GetMinimumKeyNode(Node<int> node) => node.GetLeft() is null ? node : GetMinimumKeyNode(node.GetLeft()); 
+        private Node<int> GetMinimumKeyNode(Node<int> node) => node.GetLeft() is null ? node : GetMinimumKeyNode(node.GetLeft());
 
+        /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
+        private Node<int> RecursiveGetLargestNode(Node<int> node, int value)
+        {
+            if (node.GetValue() == value)
+                return node;
+            else if (node.GetValue() > value && node.GetLeft() is not null)
+                return RecursiveGetLargestNode(node.GetLeft(), value);
+            else if (node.GetValue() < value && node.GetRight() is not null)
+                return RecursiveGetLargestNode(node.GetRight(), value);
+            if (node.GetValue() > value)
+                return node;
+            else return null;
+        }
 
 
         // overloaded constructor
@@ -272,20 +287,17 @@ namespace BinarySearchTreeClasses
         public string PostOrder() => RecursivePostOrder(Root);
 
         /// <summary>
-        /// 
+        /// "Search for a node containing value"
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public int FindLarger(int value)
-        {
-            throw new NotImplementedException();
-        }
+        /// <param name="value"> The value to search the nodes for. </param>
+        /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
+        public int FindLarger(int value) => RecursiveGetLargestNode(Root, value).GetValue();
 
         /// <summary>
-        /// 
+        /// "Similar to findLarger but removes the node before returning."
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value"> The value to search the nodes for and to remove if found. </param>
+        /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
         public int RemoveLarger(int value)
         {
             throw new NotImplementedException();

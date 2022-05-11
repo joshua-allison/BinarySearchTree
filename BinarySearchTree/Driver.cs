@@ -23,8 +23,8 @@ namespace FindLargerTreeDriver
 
             //InsertInorderTest();
             //FindTest();
-            RemoveTest();
-            //FindLargerTest();
+            //RemoveTest();
+            FindLargerTest();
             //RemoveLargerTest();
 
             Console.Write("\nAll done");
