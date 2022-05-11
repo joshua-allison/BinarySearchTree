@@ -22,8 +22,8 @@ namespace FindLargerTreeDriver
         {
 
             //InsertInorderTest();
-            FindTest();
-            //RemoveTest();
+            //FindTest();
+            RemoveTest();
             //FindLargerTest();
             //RemoveLargerTest();
 

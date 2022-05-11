@@ -26,6 +26,7 @@ namespace BinarySearchTreeClasses
         public void SetLeft(Node<T> left) => Left = left;
         public void SetRight(Node<T> right) => Right = right;
         public void SetParent(Node<T> parent) => Parent = parent;
+        public void SetValue(T value) => Value = value;
 
         // getters
         public Node<T> GetLeft() => Left;

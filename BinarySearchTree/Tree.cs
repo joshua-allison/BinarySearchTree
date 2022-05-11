@@ -101,6 +101,115 @@ namespace BinarySearchTreeClasses
             return node.GetValue() > value ? RecursiveFindValue(value, node.GetLeft()) : RecursiveFindValue(value, node.GetRight());
         }
 
+        /// <summary>
+        /// Find and remove the node that contains the passed in value.
+        /// </summary>
+        /// <param name="root"> The root of This binary tree. </param>
+        /// <param name="value"> The value to find, and remove if found. </param>
+        /// <returns> True if the value is found and removed, false otherwise. </returns>
+        /// <accreditation> The algorithm for this function is based heavily on "Deletion from BST (Binary Search Tree)" by Techie Delight: https://www.techiedelight.com/deletion-from-bst/ </accreditation>
+        private bool RecursiveDeleteNode(Node<int> root, int value)
+        {
+            //
+            bool valueFound = false;
+
+            // pointer to store the parent of the current node
+            Node<int> parent = null;
+
+            // start with the root node
+            Node<int> node = root;
+
+            // search key in the BST and set its parent pointer
+            SearchValue(ref node, value, ref parent);
+
+            // return if the key is not found in the tree
+            if (node == null) valueFound = false;
+            else
+            {
+                // Case 1: node to be deleted has no children, i.e., it is a leaf node
+                if (node.GetLeft() is null && node.GetRight() is null)
+                {
+                    // if the node to be deleted is not a root node, then set its
+                    // parent left/right child to null
+                    if (node != root)
+                    {
+                        if (parent.GetLeft() == node)
+                            parent.SetLeft(null);
+                        else parent.SetRight(null);
+                    }
+                    // if the tree has only a root node, set it to null
+                    else
+                    {
+                        root = null;
+                    }
+                }
+
+                // Case 2: node to be deleted has two children
+                else if (node.GetLeft() is not null && node.GetRight() is not null)
+                {
+                    // find its inorder successor node
+                    Node<int> successor = GetMinimumKeyNode(node.GetRight());
+
+                    // store successor value
+                    int val = successor.GetValue();
+
+                    // recursively delete the successor. Note that the successor
+                    // will have at most one child (right child)
+                    RecursiveDeleteNode(root, successor.GetValue());
+
+                    // copy value of the successor to the current node
+                    node.SetValue(val);
+                }
+
+                // Case 3: node to be deleted has only one child
+                else
+                {
+                    // choose a child node
+                    Node<int> child = (node.GetLeft() is not null) ? node.GetLeft() : node.GetRight();
+
+                    // if the node to be deleted is not a root node, set its parent
+                    // to its child
+                    if (node != root)
+                    {
+                        if (node == parent.GetLeft()) parent.SetLeft(child);
+                        else parent.SetRight(child);
+                    }
+
+                    // if the node to be deleted is a root node, then set the root to the child
+                    else root = child;
+                }
+                valueFound = true;
+            }
+            return valueFound;
+        }
+
+        /// <summary>
+        /// "Iterative function to search in the subtree rooted at `node` and set its parent."
+        /// "Note that `node` and `parent` is passed by reference to the function."
+        /// </summary>
+        /// <accreditation> The algorithm for this function is from "Deletion from BST (Binary Search Tree)" by Techie Delight: https://www.techiedelight.com/deletion-from-bst/ </accreditation>
+        private static void SearchValue(ref Node<int> node, int value, ref Node<int> parent)
+        {
+            // traverse the tree and search for the key
+            while (node is not null && node.GetValue() != value)
+            {
+                // update the parent to the current node
+                parent = node;
+
+                // if the given key is less than the current node, go to the left subtree;
+                // otherwise, go to the right subtree
+                node = node.GetValue() > value ? node.GetLeft() : node.GetRight(); 
+            }
+        }
+
+        /// <summary>
+        /// "Helper function to find minimum value node in the subtree rooted at `node`"
+        /// </summary>
+        /// <param name="node"> The node to start the recursive function from. </param>
+        /// <returns> The node in the binary tree that contains the smallest value. </returns>
+        /// <accreditation> The algorithm for this function is based heavily on "Deletion from BST (Binary Search Tree)" by Techie Delight: https://www.techiedelight.com/deletion-from-bst/ </accreditation>
+        private Node<int> GetMinimumKeyNode(Node<int> node) => node.GetLeft() is null ? node : GetMinimumKeyNode(node.GetLeft()); 
+
 
 
         // overloaded constructor
@@ -147,14 +256,11 @@ namespace BinarySearchTreeClasses
         public bool FindValue(int value) => RecursiveFindValue(value, Root);
 
         /// <summary>
-        /// 
+        /// Calls RecursiveDeleteNode to find and remove the node conatiaining the value, and then recursively reorders the binary tree (rather than just marking it as deleted.)
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool RemoveValue(int value)
-        {
-            throw new NotImplementedException();
-        }
+        /// <param name="value"> The value to search for, and subsequently removed, if found. </param>
+        /// <returns> True if the value is found and removed, false otherwise. </returns>
+        public bool RemoveValue(int value) => RecursiveDeleteNode(Root, value);
 
         /// <returns> Returns a string containing a prefix version of the ParseTree. </returns>
         public string PreOrder() => RecursivePreOrder(Root);
