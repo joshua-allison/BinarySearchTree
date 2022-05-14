@@ -20,12 +20,11 @@ namespace FindLargerTreeDriver
     {
         static void Main(string[] args)
         {
-
-            //InsertInorderTest();
-            //FindTest();
-            //RemoveTest();
+            InsertInorderTest();
+            FindTest();
+            RemoveTest();
             FindLargerTest();
-            //RemoveLargerTest();
+            RemoveLargerTest();
 
             Console.Write("\nAll done");
             Console.Write("\nPress Enter to exit console");

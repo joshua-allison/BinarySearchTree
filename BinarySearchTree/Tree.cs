@@ -213,17 +213,26 @@ namespace BinarySearchTreeClasses
         private Node<int> GetMinimumKeyNode(Node<int> node) => node.GetLeft() is null ? node : GetMinimumKeyNode(node.GetLeft());
 
         /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
-        private Node<int> RecursiveGetLargestNode(Node<int> node, int value)
+        private Node<int> RecursiveGetNextLargest(Node<int> node, int value, Node<int> nextLargest = null)
         {
-            if (node.GetValue() == value)
-                return node;
-            else if (node.GetValue() > value && node.GetLeft() is not null)
-                return RecursiveGetLargestNode(node.GetLeft(), value);
-            else if (node.GetValue() < value && node.GetRight() is not null)
-                return RecursiveGetLargestNode(node.GetRight(), value);
-            if (node.GetValue() > value)
-                return node;
-            else return null;
+            // base case: reach an empty leaf
+            if ( node is not null )
+            {
+                // if the value stored in the current node is equal to the value being searched, that node qualifies as the next largest
+                if ( node.GetValue() == value )
+                    return node;
+
+                // if the current node is larger than the value, then recur on the left, but save this node as the next largest
+                else if ( node.GetValue() > value )
+                    return RecursiveGetNextLargest( node.GetLeft(), value, node );
+
+                // if the current node is smaller than the value, then recur on the right
+                else if ( node.GetValue() < value )
+                    return RecursiveGetNextLargest( node.GetRight(), value, nextLargest );
+            }
+
+            // if we reach base case, return the most recent greater node saved
+            return nextLargest;
         }
 
 
@@ -291,7 +300,13 @@ namespace BinarySearchTreeClasses
         /// </summary>
         /// <param name="value"> The value to search the nodes for. </param>
         /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
-        public int FindLarger(int value) => RecursiveGetLargestNode(Root, value).GetValue();
+        public int FindLarger(int value )
+        {
+            // get the node with the next largest value compared to the value argument
+            Node<int> nextLargest = RecursiveGetNextLargest( Root, value );
+            // if that node is null, return -1; else return the node's value
+            return nextLargest is null ? -1 : nextLargest.GetValue();
+        }
 
         /// <summary>
         /// "Similar to findLarger but removes the node before returning."
@@ -300,7 +315,15 @@ namespace BinarySearchTreeClasses
         /// <returns> Value if found, the next larger if not found, -1 if not found and no larger exists. </returns>
         public int RemoveLarger(int value)
         {
-            throw new NotImplementedException();
+            // get the node with the next largest value compared to the value argument
+            Node<int> nextLargest = RecursiveGetNextLargest( Root, value );
+            // if that node is null, the value to return will be -1; else the value to return will be the nodes value
+            int found = nextLargest is null ? -1 : nextLargest.GetValue();
+            // unless the return value is -1, call the remove function using the return value
+            /// I wonder why 'unless' is not a keyword in programming languages...
+            if (found != -1 ) RemoveValue( found );
+            // return the value saved to the 'found' variable from earlier
+            return found;
         }
     }
 }
