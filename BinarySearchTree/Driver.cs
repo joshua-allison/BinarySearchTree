@@ -20,7 +20,6 @@ namespace FindLargerTreeDriver
     {
         static void Main(string[] args)
         {
-
             InsertInorderTest();
             FindTest();
             RemoveTest();
